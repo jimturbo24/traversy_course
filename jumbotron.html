@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React Jumbotron</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.25/browser.min.js"></script>
+  </head>
+  <body>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div id="jumbotron"></div>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/babel">
+        var Jumbotron = React.createClass({
+          render: function(){
+            return(
+              <div>
+                <div className="jumbotron">
+                  <h1 className="display-3">{this.props.title}</h1>
+                  <p className="lead">{this.props.text}</p>
+                  <a className="btn btn-primary btn-lg" onClick={this.ifClicked.bind(this, 'Leaving so soon?')} href={this.props.link} role="button" target="blank">Learn more</a>
+                </div>
+              </div>
+            )
+          },
+
+          ifClicked: function(heading){
+            alert(heading)
+          }
+        });
+
+        ReactDOM.render(
+          <Jumbotron
+            title="Big Title"
+            text="This is where the text goes."
+            link="https://google.com"/>,
+          document.getElementById('jumbotron')
+        );
+      </script>
+  </body>
+</html>
