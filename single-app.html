@@ -7,6 +7,17 @@
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.25/browser.min.js"></script>
+    <style>
+      form button {
+        margin-top: 10px;
+      }
+      li {
+        text-transform: capitalize;
+      }
+      li button {
+        margin-left: 50px;
+      }
+    </style>
   </head>
   <body>
       <div class="container">
@@ -44,14 +55,29 @@
             return(
               <div>
                 <h1>{this.state.text}</h1>
-                <TodoForm />
-                <TodoList todos={this.state.todos} />
+                <TodoForm getTodoText={this.addTodoText}/>
+                <TodoList todos={this.state.todos} handleDelete={this.doDelete}/>
               </div>
             )
           },
 
           changeText: function(e){
             this.setState({text: e.target.value});
+          },
+
+          addTodoText: function(textToAdd){
+            var todosClone = this.state.todos;
+            var newTodo = {id: todosClone.length + 1, name: textToAdd}
+            todosClone.push(newTodo);
+            this.setState({todos: todosClone});
+          },
+
+          doDelete: function(id) {
+            var todosClone = this.state.todos;
+            var index = todosClone.findIndex(foo => foo.id === id);
+            todosClone.splice(index, 1)
+            this.setState({todos: todosClone});
+            // console.log(todosClone);
           }
         });
 
@@ -59,22 +85,52 @@
           render: function(){
             return(
               <div>
-                TodoForm
+                <form onSubmit={this.whenSubmit}>
+                  <div className="form-group">
+                    <label>Todo text</label>
+                    <input type="text" ref="text" onChange={this.whenChange} className="form-control" />
+                    <button type="submit" className="btn btn-primary">Add Todo</button>
+                  </div>
+                </form>
               </div>
             );
+          },
+
+          whenChange: function(){
+            console.log('change text.....');
+          },
+
+          whenSubmit: function(e){
+            e.preventDefault();
+            var text = this.refs.text.value.trim();
+
+            if(!text){
+              alert('Please enter a todo item');
+              return;
+            }
+
+            this.props.getTodoText(text);
+            this.refs.text.value = '';
           }
         });
 
         var TodoList = React.createClass({
           render: function(){
             return(
-              <ul>
+              <ul className="list-group">
                 {this.props.todos.map(todo => {
-                    return <li  key={todo.id}>{todo.name}</li>
+                    return <li className="list-group-item" key={todo.id}>
+                    {todo.name}
+                    <button onClick={this.whenDelete.bind(this, todo.id)} type="text" className="btn btn-danger">Delete</button>
+                    </li>
                   })
                 }
               </ul>
             );
+          },
+
+          whenDelete: function(id) {
+            return this.props.handleDelete(id);
           }
         });
 
